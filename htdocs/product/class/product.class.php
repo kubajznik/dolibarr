@@ -4373,48 +4373,57 @@ class Product extends CommonObject
 	 */
 	public function getChildsArbo($id, $firstlevelonly = 0, $level = 1)
 	{
-		global $alreadyfound;
+		global $alreadyfound, $outputlangs;
+
+		if (empty($id)) {
+			return array();
+		}
 
 		$sql = "SELECT p.rowid, p.ref, p.label as label, p.fk_product_type,";
 		$sql .= " pa.qty as qty, pa.fk_product_fils as id, pa.incdec";
 		$sql .= " FROM ".MAIN_DB_PREFIX."product as p,";
 		$sql .= " ".MAIN_DB_PREFIX."product_association as pa";
 		$sql .= " WHERE p.rowid = pa.fk_product_fils";
-		$sql .= " AND pa.fk_product_pere = ".$id;
-		$sql .= " AND pa.fk_product_fils != ".$id; // This should not happens, it is to avoid infinite loop if it happens
+		$sql .= " AND pa.fk_product_pere = ".((int) $id);
+		$sql .= " AND pa.fk_product_fils <> ".((int) $id); // This should not happens, it is to avoid infinite loop if it happens
 
 		dol_syslog(get_class($this).'::getChildsArbo id='.$id.' level='.$level, LOG_DEBUG);
 
-		if ($level == 1) { $alreadyfound = array($id=>1); // We init array of found object to start of tree, so if we found it later (should not happened), we stop immediatly
+		if ($level == 1) {
+			$alreadyfound = array($id=>1); // We init array of found object to start of tree, so if we found it later (should not happened), we stop immediatly
 		}
 		// Protection against infinite loop
-		if ($level > 30) { return array();
+		if ($level > 30) {
+			return array();
 		}
+
+		include_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
+		$prod = new Product($this->db);
 
 		$res = $this->db->query($sql);
 		if ($res) {
 			$prods = array();
-			while ($rec = $this->db->fetch_array($res))
-			{
+			while ($rec = $this->db->fetch_array($res)) {
 				if (!empty($alreadyfound[$rec['rowid']])) {
 					dol_syslog(get_class($this).'::getChildsArbo the product id='.$rec['rowid'].' was already found at a higher level in tree. We discard to avoid infinite loop', LOG_WARNING);
 					continue;
 				}
 				$alreadyfound[$rec['rowid']] = 1;
+				$prod->fetch($rec['rowid']);
+				$label = $this->db->escape($prod->multilangs[$outputlangs->defaultlang]["label"]);
 				$prods[$rec['rowid']] = array(
-				 0=>$rec['rowid'],
-				 1=>$rec['qty'],
-				 2=>$rec['fk_product_type'],
-				 3=>$this->db->escape($rec['label']),
-				 4=>$rec['incdec'],
-				 5=>$rec['ref']
+					0=>$rec['rowid'],
+					1=>$rec['qty'],
+					2=>$rec['fk_product_type'],
+					3=>$label,
+					4=>$rec['incdec'],
+					5=>$rec['ref']
 				);
 				//$prods[$this->db->escape($rec['label'])]= array(0=>$rec['id'],1=>$rec['qty'],2=>$rec['fk_product_type']);
 				//$prods[$this->db->escape($rec['label'])]= array(0=>$rec['id'],1=>$rec['qty']);
 				if (empty($firstlevelonly)) {
-					   $listofchilds = $this->getChildsArbo($rec['rowid'], 0, $level + 1);
-					foreach ($listofchilds as $keyChild => $valueChild)
-					   {
+					$listofchilds = $this->getChildsArbo($rec['rowid'], 0, $level + 1);
+					foreach ($listofchilds as $keyChild => $valueChild) {
 						$prods[$rec['rowid']]['childs'][$keyChild] = $valueChild;
 					}
 				}
