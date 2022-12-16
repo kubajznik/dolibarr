@@ -232,6 +232,19 @@ class Thirdparties extends DolibarrApi
 		// Check mandatory fields
 		$result = $this->_validate($request_data);
 
+        if(!isset($request_data['country_id']) && isset($request_data['country_code'])) {
+            $country_code = $this->db->escape($request_data['country_code']);
+            $column = strlen($country_code) > 2 ? 'code_iso' : 'code';
+            $sql = "SELECT rowid FROM ".MAIN_DB_PREFIX."c_country WHERE ".$column."='".$country_code."'";
+            $res = $this->db->query($sql);
+            if($res) {
+                $result = $res->fetch_array(MYSQLI_ASSOC);
+                $request_data['country_id'] = $result['rowid'];
+            } else {
+                throw new RestException(503, 'Error finding ISO country code in database : '.$sql);
+            }
+        }
+
 		foreach ($request_data as $field => $value) {
 			$this->company->$field = $value;
 		}

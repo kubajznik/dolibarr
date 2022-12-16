@@ -429,7 +429,14 @@ if (empty($reshook))
 			}
 			$object->entity					= (GETPOSTISSET('entity') ? GETPOST('entity', 'int') : $conf->entity);
 			$object->name_alias = GETPOST('name_alias', 'alphanohtml');
-			$object->address				= GETPOST('address', 'alphanohtml');
+
+            // HandsOn uses multiple fields for address
+            $object->address = GETPOST('strasse', 'alphanohtml').";".
+                GETPOST('nr', 'alphanohtml').";".
+                GETPOST('addr2', 'alphanohtml').";".
+                GETPOST('addr3', 'alphanohtml');
+            //$object->address = GETPOST('address', 'alphanohtml');
+
 			$object->zip = GETPOST('zipcode', 'alphanohtml');
 			$object->town = GETPOST('town', 'alphanohtml');
 			$object->country_id = GETPOST('country_id', 'int');
@@ -1015,7 +1022,13 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action))
 			setEventMessages($langs->trans('NewCustomerSupplierCodeProposed'), '', 'warnings');
 		}
 
-		$object->address = GETPOST('address', 'alphanohtml');
+        // HandsOn uses multiple fields for address
+        $object->address = GETPOST('strasse', 'alphanohtml').";".
+            GETPOST('nr', 'alphanohtml').";".
+            GETPOST('addr2', 'alphanohtml').";".
+            GETPOST('addr3', 'alphanohtml');
+        //$object->address = GETPOST('address', 'alphanohtml');
+
 		$object->zip = GETPOST('zipcode', 'alphanohtml');
 		$object->town = GETPOST('town', 'alphanohtml');
 		$object->state_id = GETPOST('state_id', 'int');
@@ -2388,7 +2401,7 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action))
 
 		dol_htmloutput_mesg(is_numeric($error) ? '' : $error, $errors, 'error');
 
-		$linkback = '<a href="'.DOL_URL_ROOT.'/societe/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
+		$linkback = '<a href="'.DOL_URL_ROOT. (GETPOSTISSET('linkback') ? urldecode(GETPOST('linkback', 'alpha')) : '/societe/list.php') . '?restore_lastsearch_values=1">'.$langs->trans((GETPOSTISSET('linkbacktext') ? urldecode(GETPOST('linkbacktext', 'alpha')) : "BackToList")).'</a>';
 
 		dol_banner_tab($object, 'socid', $linkback, ($user->socid ? 0 : 1), 'rowid', 'nom');
 

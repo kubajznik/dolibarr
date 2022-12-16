@@ -1182,16 +1182,16 @@ class FormFile
 			print "</tr>\n";
 
 			// Get list of files stored into database for same relative directory
-			if ($relativedir)
-			{
+			if ($relativedir) {
 				completeFileArrayWithDatabaseInfo($filearray, $relativedir);
-
-				//var_dump($sortfield.' - '.$sortorder);
-				if ($sortfield && $sortorder)	// If $sortfield is for example 'position_name', we will sort on the property 'position_name' (that is concat of position+name)
-				{
-					$filearray = dol_sort_array($filearray, $sortfield, $sortorder);
-				}
 			}
+
+			//var_dump($sortfield.' - '.$sortorder);
+			if ($sortfield && $sortorder)	// If $sortfield is for example 'position_name', we will sort on the property 'position_name' (that is concat of position+name)
+			{
+				$filearray = dol_sort_array($filearray, $sortfield, $sortorder);
+			}
+
 
 			$nboffiles = count($filearray);
 			if ($nboffiles > 0) include_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';

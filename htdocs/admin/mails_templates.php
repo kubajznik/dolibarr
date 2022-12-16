@@ -395,9 +395,9 @@ if (empty($reshook)) {
 			}
 
 			$sql .= " WHERE ".$rowidcol." = ".((int) $rowid);
-			if (!$user->admin) {	// A non admin user can only edit its own template
-				$sql .= " AND fk_user  = ".((int) $user->id);
-			}
+			//if (!$user->admin) {	// A non admin user can only edit its own template
+			//	$sql .= " AND fk_user  = ".((int) $user->id);
+			//}
 			//print $sql;exit;
 			dol_syslog("actionmodify", LOG_DEBUG);
 			//print $sql;
@@ -926,12 +926,12 @@ if ($resql)
 
 				// Can an entry be erased or disabled ?
 				$iserasable = 1; $canbedisabled = 1; $canbemodified = 1; // true by default
-				if (!$user->admin && $obj->fk_user != $user->id)
+				/*if (!$user->admin && $obj->fk_user != $user->id)
 				{
 					$iserasable = 0;
 					$canbedisabled = 0;
 					$canbemodified = 0;
-				}
+				}*/
 
 				$url = $_SERVER["PHP_SELF"].'?'.($page ? 'page='.$page.'&' : '').'sortfield='.$sortfield.'&sortorder='.$sortorder.'&rowid='.(!empty($obj->rowid) ? $obj->rowid : (!empty($obj->code) ? $obj->code : '')).'&code='.(!empty($obj->code) ?urlencode($obj->code) : '');
 				if ($param) $url .= '&'.$param;

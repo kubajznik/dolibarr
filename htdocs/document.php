@@ -229,6 +229,7 @@ if (preg_match('/\.\./', $fullpath_original_file) || preg_match('/[<>|]/', $full
 clearstatcache();
 
 $filename = basename($fullpath_original_file);
+
 $filename = preg_replace('/\.noexe$/i', '', $filename);
 
 // Output file on browser

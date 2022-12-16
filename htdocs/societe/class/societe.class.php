@@ -2381,9 +2381,10 @@ class Societe extends CommonObject
 	 *		@param	int		$maxlen			          Max length of name
 	 *      @param	int  	$notooltip		          1=Disable tooltip
 	 *      @param  int     $save_lastsearch_value    -1=Auto, 0=No save of lastsearch_values when clicking, 1=Save lastsearch_values whenclicking
+	 * 		@param  string	$linkback				  Link
 	 *		@return	string					          String with URL
 	 */
-	public function getNomUrl($withpicto = 0, $option = '', $maxlen = 0, $notooltip = 0, $save_lastsearch_value = -1)
+	public function getNomUrl($withpicto = 0, $option = '', $maxlen = 0, $notooltip = 0, $save_lastsearch_value = -1, $linkback = null)
 	{
 		global $conf, $langs, $hookmanager;
 
@@ -2471,6 +2472,9 @@ class Societe extends CommonObject
 			$label .= img_picto('', $this->picto).' <u class="paddingrightonly">'.$langs->trans("ThirdParty").'</u>';
 			$linkstart = '<a href="'.DOL_URL_ROOT.'/societe/card.php?socid='.$this->id;
 		}
+
+		if ($linkback) $linkstart .= $linkback;
+
 		if (isset($this->status)) {
 			$label .= ' '.$this->getLibStatut(5);
 		}

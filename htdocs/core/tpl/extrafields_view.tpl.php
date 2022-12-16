@@ -138,11 +138,12 @@ if (empty($reshook) && is_array($extrafields->attributes[$object->table_element]
 			print '</td>';
 
 			//TODO Improve element and rights detection
-			//var_dump($user->rights);
 			$permok = false;
 			$keyforperm = $object->element;
+            $module = $object->module;
 			if ($object->element == 'fichinter') $keyforperm = 'ficheinter';
 			if (isset($user->rights->$keyforperm)) $permok = $user->rights->$keyforperm->creer || $user->rights->$keyforperm->create || $user->rights->$keyforperm->write;
+            if (isset($user->rights->$module->$keyforperm)) $permok = $user->rights->$module->$keyforperm->creer || $user->rights->$module->$keyforperm->create || $user->rights->$module->$keyforperm->write;
 			if ($object->element == 'order_supplier')   $permok = $user->rights->fournisseur->commande->creer;
 			if ($object->element == 'invoice_supplier') $permok = $user->rights->fournisseur->facture->creer;
 			if ($object->element == 'shipping')         $permok = $user->rights->expedition->creer;

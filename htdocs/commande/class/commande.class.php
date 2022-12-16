@@ -1692,7 +1692,7 @@ class Commande extends CommonOrder
 			$prod = new Product($this->db);
 			$prod->fetch($idproduct);
 
-			$tva_tx = get_default_tva($mysoc, $this->thirdparty, $prod->id);
+			$tva_tx = 7.0;//get_default_tva($mysoc, $this->thirdparty, $prod->id);
 			$tva_npr = get_default_npr($mysoc, $this->thirdparty, $prod->id);
 			if (empty($tva_tx)) $tva_npr = 0;
 			$vat_src_code = ''; // May be defined into tva_tx
@@ -1768,7 +1768,7 @@ class Commande extends CommonOrder
 		if (empty($id) && empty($ref) && empty($ref_ext)) return -1;
 
 		$sql = 'SELECT c.rowid, c.entity, c.date_creation, c.ref, c.fk_soc, c.fk_user_author, c.fk_user_valid, c.fk_statut';
-		$sql .= ', c.amount_ht, c.total_ht, c.total_ttc, c.tva as total_tva, c.localtax1 as total_localtax1, c.localtax2 as total_localtax2, c.fk_cond_reglement, c.fk_mode_reglement, c.fk_availability, c.fk_input_reason';
+		$sql .= ', c.amount_ht, c.total_ht, c.total_ttc, c.total_tva as total_tva, c.localtax1 as total_localtax1, c.localtax2 as total_localtax2, c.fk_cond_reglement, c.fk_mode_reglement, c.fk_availability, c.fk_input_reason';
 		$sql .= ', c.fk_account';
 		$sql .= ', c.date_commande, c.date_valid, c.tms';
 		$sql .= ', c.date_livraison as delivery_date';

@@ -40,7 +40,8 @@ class InfoBox
 		if (empty($conf->global->MAIN_FEATURES_LEVEL) || $conf->global->MAIN_FEATURES_LEVEL < 2) {
 			return array(
 				0 => 'Home',
-				27 => 'AccountancyHome'
+				27 => 'AccountancyHome',
+                42 => 'fllindex'
 			);
 		} else {
 			return array(

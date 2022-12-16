@@ -388,7 +388,7 @@ if (($action == 'send' || $action == 'relance') && !$_POST['addfile'] && !$_POST
 						$object->email_to = $sendto;
 						$object->email_tocc = $sendtocc;
 						$object->email_tobcc = $sendtobcc;
-						$object->email_subject = $subject;
+						$object->email_message = $message;
 						$object->email_msgid = $mailfile->msgid;
 
 						// Call of triggers (you should have set $triggersendname to execute trigger. $trigger_name is deprecated)

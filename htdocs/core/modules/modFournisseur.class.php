@@ -852,7 +852,7 @@ class modFournisseur extends DolibarrModules
 			'c.fk_statut'         => 'Status*',
 			'c.billed'            => 'Billed(0/1)',
 			'c.remise_percent'    => 'GlobalDiscount',
-			'c.tva'               => 'TotalTVA',
+			'c.total_tva'               => 'TotalTVA',
 			'c.total_ht'          => 'TotalHT',
 			'c.total_ttc'         => 'TotalTTC',
 			'c.note_private'      => 'NotePrivate',

@@ -44,3 +44,15 @@ if (GETPOST('formfilteraction', 'alphanohtml') == 'listafterchangingselectedfiel
 	//$action='list';
 	//var_dump($tabparam);exit;
 }
+
+$sort = 'MAIN_SORTFIELD_' . $hookmanager->contextarray[0];
+$order = 'MAIN_SORTORDER_' . $hookmanager->contextarray[0];
+
+if ($user->conf->$sort && !GETPOST('sortfield', 'az09comma')) {
+    $sortfield = $user->conf->$sort;
+}
+if ($user->conf->$order && !GETPOST('sortfield', 'az09comma')) {
+    $sortorder = $user->conf->$order;
+}
+
+dol_set_user_param($db, $conf, $user, array($sort => $sortfield, $order => $sortorder));

@@ -39,6 +39,7 @@ if ($action == 'update' && is_array($arrayofparameters))
 			$result = dolibarr_set_const($db, $key, GETPOST($key, 'alpha'), 'chaine', 0, '', $conf->entity);
 			if ($result < 0)
 			{
+				var_dump('error');
 				$error++;
 				break;
 			}

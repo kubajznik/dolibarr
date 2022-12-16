@@ -18,17 +18,17 @@
  */
 
 /**
- *  \file       htdocs/core/modules/facture/mod_facture_terre.php
+ *  \file       htdocs/core/modules/facture/mod_facture_hot.php
  *  \ingroup    facture
  *  \brief      File containing class for numbering module Terre
  */
 require_once DOL_DOCUMENT_ROOT.'/core/modules/facture/modules_facture.php';
 
 /**
- *  \class      mod_facture_terre
- *  \brief      Class of numbering module Terre for invoices
+ *  \class      mod_facture_hot
+ *  \brief      Class of numbering module hot for invoices
  */
-class mod_facture_terre extends ModeleNumRefFactures
+class mod_facture_hot extends ModeleNumRefFactures
 {
 	/**
 	 * Dolibarr version of the loaded document 'development', 'experimental', 'dolibarr'

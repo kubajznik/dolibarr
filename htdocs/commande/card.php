@@ -1855,7 +1855,6 @@ if ($action == 'create' && $usercancreate)
 } else {
 	// Mode view
 	$now = dol_now();
-
 	if ($object->id > 0) {
 		$product_static = new Product($db);
 
@@ -2067,9 +2066,25 @@ if ($action == 'create' && $usercancreate)
 		}
 		$morehtmlref .= '</div>';
 
+        if ($object->array_options['options_team'] > 0) {
+            dol_include_once('handson/class/team.class.php');
+            $team = new Team($db);
+            $team->fetch($object->array_options['options_team']);
 
-		dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
+            $morehtmlstatus = '<div class="teamlink">';
+            $morehtmlstatus .= $team->getNomUrl(0, '', 0, '', 0, 3);
+            $morehtmlstatus .= '</div>';
+        } elseif ($object->array_options['options_klazi'] > 0) {
+            dol_include_once('handson/class/klazi.class.php');
+            $klazi = new Klazi($db);
+            $klazi->fetch($object->array_options['options_klazi']);
 
+            $morehtmlstatus = '<div class="teamlink">';
+            $morehtmlstatus .= $klazi->getNomUrl(0, '', 0, '', 0, 3);
+            $morehtmlstatus .= '</div>';
+        }
+
+		dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', '', '', $morehtmlstatus);
 
 		print '<div class="fichecenter">';
 		print '<div class="fichehalfleft">';

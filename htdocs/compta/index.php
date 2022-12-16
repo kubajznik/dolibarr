@@ -138,7 +138,7 @@ if (!empty($conf->facture->enabled) && $user->rights->facture->lire)
 {
 	$tmpinvoice = new Facture($db);
 
-	$sql = "SELECT f.rowid, f.ref, f.datef as date, f.total as total_ht, f.tva as total_tva, f.total_ttc, f.ref_client";
+	$sql = "SELECT f.rowid, f.ref, f.datef as date, f.total_ht as total_ht, f.total_tva as total_tva, f.total_ttc, f.ref_client";
 	$sql .= ", f.type, f.fk_statut as status, f.paye";
 	$sql .= ", s.nom as name";
 	$sql .= ", s.rowid as socid, s.email";
@@ -160,7 +160,7 @@ if (!empty($conf->facture->enabled) && $user->rights->facture->lire)
 	$reshook = $hookmanager->executeHooks('printFieldListWhereCustomerDraft', $parameters);
 	$sql .= $hookmanager->resPrint;
 
-	$sql .= " GROUP BY f.rowid, f.ref, f.datef, f.total, f.tva, f.total_ttc, f.ref_client, f.type, f.fk_statut, f.paye,";
+	$sql .= " GROUP BY f.rowid, f.ref, f.datef, f.total_ht, f.total_tva, f.total_ttc, f.ref_client, f.type, f.fk_statut, f.paye,";
 	$sql .= " s.email, s.nom, s.rowid, s.code_client, s.code_compta, s.code_fournisseur, s.code_compta_fournisseur,";
 	$sql .= " cc.rowid, cc.code";
 
@@ -350,7 +350,7 @@ if (!empty($conf->facture->enabled) && $user->rights->facture->lire)
 	$langs->load("boxes");
 	$tmpinvoice = new Facture($db);
 
-	$sql = "SELECT f.rowid, f.ref, f.fk_statut as status, f.type, f.total as total_ht, f.tva as total_tva, f.total_ttc, f.paye, f.tms";
+	$sql = "SELECT f.rowid, f.ref, f.fk_statut as status, f.type, f.total_ht as total_ht, f.total_tva as total_tva, f.total_ttc, f.paye, f.tms";
 	$sql .= ", f.date_lim_reglement as datelimite";
 	$sql .= ", s.nom as name";
 	$sql .= ", s.rowid as socid";
@@ -798,7 +798,7 @@ if (!empty($conf->facture->enabled) && !empty($conf->commande->enabled) && $user
 	$sql .= ", s.nom as name, s.email";
 	$sql .= ", s.rowid as socid";
 	$sql .= ", s.code_client, s.code_compta";
-	$sql .= ", c.rowid, c.ref, c.facture, c.fk_statut as status, c.total_ht, c.tva as total_tva, c.total_ttc,";
+	$sql .= ", c.rowid, c.ref, c.facture, c.fk_statut as status, c.total_ht, c.total_tva as total_tva, c.total_ttc,";
 	$sql .= " cc.rowid as country_id, cc.code as country_code";
 	$sql .= " FROM ".MAIN_DB_PREFIX."societe as s LEFT JOIN ".MAIN_DB_PREFIX."c_country as cc ON cc.rowid = s.fk_pays";
 	if (!$user->rights->societe->client->voir && !$socid) $sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
@@ -816,7 +816,7 @@ if (!empty($conf->facture->enabled) && !empty($conf->commande->enabled) && $user
 	$reshook = $hookmanager->executeHooks('printFieldListWhereCustomerOrderToBill', $parameters);
 	$sql .= $hookmanager->resPrint;
 
-	$sql .= " GROUP BY s.nom, s.email, s.rowid, s.code_client, s.code_compta, c.rowid, c.ref, c.facture, c.fk_statut, c.total_ht, c.tva, c.total_ttc, cc.rowid, cc.code";
+	$sql .= " GROUP BY s.nom, s.email, s.rowid, s.code_client, s.code_compta, c.rowid, c.ref, c.facture, c.fk_statut, c.total_ht, c.total_tva, c.total_ttc, cc.rowid, cc.code";
 
 	$resql = $db->query($sql);
 	if ($resql)

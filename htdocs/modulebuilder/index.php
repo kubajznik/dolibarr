@@ -1419,7 +1419,7 @@ if ($dirins && $action == 'generatepackage')
 		if ($dirofmodule)
 		{
 			if (!dol_is_dir($dirofmodule)) dol_mkdir($dirofmodule);
-			$result = dol_compress_dir($dir, $outputfilezip, 'zip', '', $modulelowercase);
+			$result = dol_compress_dir($dir, $outputfilezip, 'zip', '/bin/', $modulelowercase);
 		} else {
 			$result = -1;
 		}

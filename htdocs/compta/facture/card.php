@@ -661,6 +661,18 @@ if (empty($reshook))
 					$result = $object->generateDocument($model, $outputlangs, $hidedetails, $hidedesc, $hideref);
 					if ($result < 0) setEventMessages($object->error, $object->errors, 'errors');
 				}
+
+				// Trigger calls
+				if (!$error && !$notrigger) {
+					// Call trigger
+					$result = $object->call_trigger('BILL_VALIDATED', $user);
+					if ($result < 0) {
+						$error++;
+					}
+					// End call triggers
+				}
+
+				//header('Location: '.$_SERVER["PHP_SELF"].'?facid='.$object->id.'&action=presend&mode=init#formmailbeforetitle'); // To show again edited page
 			} else {
 				if (count($object->errors)) setEventMessages(null, $object->errors, 'errors');
 				else setEventMessages($object->error, $object->errors, 'errors');
@@ -2802,6 +2814,9 @@ if ($action == 'create')
 			if ($element == 'shipping') {
 				$element = $subelement = 'expedition';
 			}
+            if ($element == 'facture') {
+                $element = $subelement = 'facture';
+            }
 
 			dol_include_once('/'.$element.'/class/'.$subelement.'.class.php');
 
@@ -2869,6 +2884,13 @@ if ($action == 'create')
 		$dateinvoice = (empty($dateinvoice) ? (empty($conf->global->MAIN_AUTOFILL_DATE) ?-1 : '') : $dateinvoice); // Do not set 0 here (0 for a date is 1970)
 
 		if (!empty($conf->multicurrency->enabled) && !empty($soc->multicurrency_code)) $currency_code = $soc->multicurrency_code;
+
+        if (GETPOST('fac_avoir', 'int')) {
+            $objectsrc = new Facture($db);
+            $objectsrc->fetch(GETPOST('fac_avoir', 'int'));
+            $objectsrc->fetch_optionals();
+            $object->array_options = $objectsrc->array_options;
+        }
 	}
 
 	// when payment condition is empty (means not override by payment condition form a other object, like third-party), try to use default value
@@ -4081,7 +4103,23 @@ if ($action == 'create')
 
 	$object->totalpaye = $totalpaye; // To give a chance to dol_banner_tab to use already paid amount to show correct status
 
-	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', 0, '', '');
+    /*switch ($object->array_options['options_program']) {
+        case 1:
+        case 2:
+        dol_include_once('handson/class/team.class.php');
+        $team = new Team($db);
+        $team->fetch($object->array_options['options_team']);
+
+        dol_include_once('handson/class/klazi.class.php');
+        $team = new Klazi($db);
+        $team->fetch($object->array_options['options_klazi']);
+    }
+
+	$morehtmlstatus = '<div class="teamlink">';
+	$morehtmlstatus .= $team->getNomUrl(0, '', 0, '', 0, 3);
+	$morehtmlstatus .= '</div>';*/
+
+	dol_banner_tab($object, 'ref', $linkback, 1, 'ref', 'ref', $morehtmlref, '', 0, '', $morehtmlstatus);
 
 	print '<div class="fichecenter">';
 	print '<div class="fichehalfleft">';
@@ -5079,7 +5117,6 @@ if ($action == 'create')
 
 	print "</table>\n";
 	print "</div>";
-
 	print "</form>\n";
 
 	print dol_get_fiche_end();
@@ -5269,7 +5306,7 @@ if ($action == 'create')
 			{
 				if (!$objectidnext)
 				{
-					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?socid='.$object->socid.'&amp;fac_avoir='.$object->id.'&amp;action=create&amp;type=2'.($object->fk_project > 0 ? '&amp;projectid='.$object->fk_project : '').($object->entity > 0 ? '&amp;originentity='.$object->entity : '').'">'.$langs->trans("CreateCreditNote").'</a>';
+					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?socid='.$object->socid.'&amp;fac_avoir='.$object->id.'&amp;action=create&amp;origin=facture&amp;originid='.$object->id.'&amp;type=2'.($object->fk_project > 0 ? '&amp;projectid='.$object->fk_project : '').($object->entity > 0 ? '&amp;originentity='.$object->entity : '').'">'.$langs->trans("CreateCreditNote").'</a>';
 				}
 			}
 

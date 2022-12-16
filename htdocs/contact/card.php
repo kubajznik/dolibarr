@@ -184,7 +184,14 @@ if (empty($reshook))
 		$object->firstname = (string) GETPOST("firstname", 'alpha');
 		$object->civility_code = (string) GETPOST("civility_code", 'alpha');
 		$object->poste = (string) GETPOST("poste", 'alpha');
-		$object->address = (string) GETPOST("address", 'alpha');
+
+        // HandsOn uses multiple fields for address
+        $object->address = GETPOST('strasse', 'alphanohtml').";".
+            GETPOST('nr', 'alphanohtml').";".
+            GETPOST('addr2', 'alphanohtml').";".
+            GETPOST('addr3', 'alphanohtml');
+        //$object->address = GETPOST('address', 'alphanohtml');
+
 		$object->zip = (string) GETPOST("zipcode", 'alpha');
 		$object->town = (string) GETPOST("town", 'alpha');
 		$object->country_id = (int) GETPOST("country_id", 'int');
@@ -400,7 +407,13 @@ if (empty($reshook))
 			$object->civility_code = (string) GETPOST("civility_code", 'alpha');
 			$object->poste = (string) GETPOST("poste", 'alpha');
 
-			$object->address = (string) GETPOST("address", 'alpha');
+            // HandsOn uses multiple fields for address
+            $object->address = GETPOST('strasse', 'alphanohtml').";".
+                GETPOST('nr', 'alphanohtml').";".
+                GETPOST('addr2', 'alphanohtml').";".
+                GETPOST('addr3', 'alphanohtml');
+            //$object->address = GETPOST('address', 'alphanohtml');
+
 			$object->zip = (string) GETPOST("zipcode", 'alpha');
 			$object->town = (string) GETPOST("town", 'alpha');
 			$object->state_id = GETPOST("state_id", 'int');
@@ -519,6 +532,10 @@ if ($socid > 0)
 {
 	$objsoc = new Societe($db);
 	$objsoc->fetch($socid);
+}
+
+if($action == 'update' && $cancel != '') {
+    $action = 'view';
 }
 
 if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action))
@@ -1277,7 +1294,13 @@ if (is_object($objcanvas) && $objcanvas->displayCanvasExists($action))
 		}
 		$morehtmlref .= '</div>';
 
-		dol_banner_tab($object, 'id', $linkback, 1, 'rowid', 'ref', $morehtmlref);
+		dol_include_once('handson/class/team.class.php');
+		$team = new Team($db);
+		$morehtmlstatus = '<div class="teamlink">';
+		$morehtmlstatus .= $team->getNomUrl(0, '', 0, '', 0, 3);
+		$morehtmlstatus .= '</div>';
+
+		dol_banner_tab($object, 'id', $linkback, 1, 'rowid', 'ref', $morehtmlref, '', 0, '', $morehtmlstatus);
 
 
 		print '<div class="fichecenter">';
